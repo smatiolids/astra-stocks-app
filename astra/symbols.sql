@@ -1,4 +1,4 @@
-CREATE TABLE demo.symbols (
+CREATE TABLE stocks.symbols (
     TckrSymb TEXT PRIMARY KEY,
     Asst TEXT,
     AsstDesc TEXT,

@@ -46,10 +46,10 @@ var (
 )
 
 func main() {
-	log.Println("Pulsar Producer")
+	log.Println("[Astra Streaming] Starting Pulsar Producer")
 
 	// Configuration variables pertaining to this consumer
-	tokenStr := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NTA0NzkxMDgsImlzcyI6ImRhdGFzdGF4Iiwic3ViIjoiY2xpZW50OzQxOTQwMjM3LTQ3NmUtNDZiNi05OTcxLTE2MTVmY2IyODA0ODtZMlJqWkdWdGJ5MXpkSEpsWVcxejtlZTRkMTJmOTM4IiwidG9rZW5pZCI6ImVlNGQxMmY5MzgifQ.AEgsd4hIu-1wb7xYlpYlKr-bicxUebjRy9NGH7ZhFz3Y45WRyR8P0A7RTHLe4rV4NwczpT5H_eDM2bBEnZM3oPzxncffWv0cIjM3z2mGwWhGK-P4T9hQJL44Rfw3lknMZrWXzdr4sfkYW8JKtfUb3scL3tcPIgsLKM5pSsinjHRiJg3YV3j63uA2iAUfzGQgZdHL2rhIPiv1QVEzcJ8oQQuZ0pZD69r_yNXPVkzsQ136oj8whZzaTQxdiri5OO108k15MxSFoSu5YNu128nIdxAkNV7m4B5v-dIc_MS3Wi78M9pgLpV5DHWHIr-2N9WNU-eb29JoW7_q1R11NgeZLg"
+	tokenStr := ""
 	uri := "pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651"
 	topicName := "persistent://cdcdemo-streams/astracdc/b3intraday"
 
@@ -61,12 +61,12 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("Could not instantiate Pulsar client: %v", err)
+		log.Fatalf("[Astra Streaming] Could not instantiate Pulsar client: %v", err)
 	}
 
 	defer client.Close()
 
-	log.Printf("creating producer...")
+	log.Printf("[Astra Streaming] Creating producer...")
 	producerJS := pulsar.NewJSONSchema(tradeSchemaDef, nil)
 	// Use the client to instantiate a producer
 	producer, err := client.CreateProducer(pulsar.ProducerOptions{
@@ -74,13 +74,13 @@ func main() {
 		Schema: producerJS,
 	})
 
-	log.Printf("checking error of producer creation...")
+	log.Printf("[Astra Streaming] Checking error of producer creation...")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer producer.Close()
-	log.Printf("Opening file... %s", os.Args[1])
+	log.Printf("[Astra Streaming] Opening file... %s", os.Args[1])
 
 	file, err := os.Open(os.Args[1])
 	if err != nil {
@@ -123,6 +123,6 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("Published message: %s", line)
+		log.Printf("[Astra Streaming] Published message: %s", line)
 	}
 }

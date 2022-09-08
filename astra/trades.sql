@@ -1,4 +1,4 @@
-CREATE TABLE demo.trades (
+CREATE TABLE stocks.trades (
     TradeId TEXT,
     RptDt TEXT,
     TS TIMESTAMP,
