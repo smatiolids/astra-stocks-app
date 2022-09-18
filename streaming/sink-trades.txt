@@ -1,0 +1,1 @@
+rptdt=value.RptDt, tckrsymb=value.TckrSymb, ts=value.TS, grsstradamt=value.GrssTradAmt, ntrytm=value.NtryTm, traddt=value.TradDt, tradeid=value.TradeId, tradgssnid=value.TradgSsnId, tradid=value.TradId, tradqty=value.TradQty, updactn=value.UpdActn

@@ -23,7 +23,8 @@ const columns: GridColDef[] = [
   },
 ];
 
-const StreamingList = ({ symbol }) => {
+const StreamingList = (props) => {
+  const { symbol } = props
   const [messageHistory, setMessageHistory] = useState([]);
   const conn = `${process.env.REACT_APP_SOCKET_URL}/reader/persistent/${process.env.REACT_APP_TENANT}/${process.env.REACT_APP_NAMESPACE}/${process.env.REACT_APP_TOPIC}?token=${process.env.REACT_APP_SOCKET_TOKEN}&messageId=latest`;
   const { lastMessage, readyState } = useWebSocket(conn);
@@ -59,7 +60,7 @@ const StreamingList = ({ symbol }) => {
 
   return (
     <div>
-      <span>WebSocket status: {connectionStatus}</span>
+      <span>WebSocket status: {connectionStatus} {symbol}</span>
       <div>
           <h5>Versões históricas</h5>
 

@@ -1,11 +1,11 @@
-import StreamingList from './streamingList';
+import StreamingChart from './streamingChart';
 
 const StreamingTrades = (props) => {
   return (
     <div>
       <h3>Trades</h3>
       <div>{process.env.REACT_APP_SOCKET_URL}</div>
-        <StreamingList symbol="PETR4" />
+        <StreamingChart symbol="GGBR4F" />
     </div>
   );
 };

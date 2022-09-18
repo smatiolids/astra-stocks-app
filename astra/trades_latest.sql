@@ -1,4 +1,4 @@
-CREATE TABLE stocks.trades_latest (
+CREATE TABLE stockapp.trades_latest (
     TradeId TEXT,
     RptDt TEXT,
     TS TIMESTAMP,
@@ -11,4 +11,4 @@ CREATE TABLE stocks.trades_latest (
     TradgSsnId TEXT,
     TradDt TEXT,
     PRIMARY KEY( (RptDt), TckrSymb)
-) 
+) ;

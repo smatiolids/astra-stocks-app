@@ -28,7 +28,7 @@ type tradeType struct {
 }
 
 var (
-	//RptDt;TckrSymb;UpdActn;GrssTradAmt;TradQty;NtryTm;TradId;TradgSsnId;TradDt
+	// Estrutura de dados para envio ao Astra Streaming
 	tradeSchemaDef = "{\"type\":\"record\",\"name\":\"Trade\",\"namespace\":\"demo\"," +
 		"\"fields\":[" +
 		"{\"name\":\"TS\",\"type\":\"string\"}," +
@@ -48,10 +48,16 @@ var (
 func main() {
 	log.Println("[Astra Streaming] Starting Pulsar Producer")
 
-	// Configuration variables pertaining to this consumer
-	tokenStr := ""
-	uri := "pulsar+ssl://pulsar-gcp-europewest1.streaming.datastax.com:6651"
-	topicName := "persistent://cdcdemo-streams/astracdc/b3intraday"
+	// Configuração para conexão com Astra Streaming
+
+	// Busque o "Broker Service URL" na aba "Connect"
+	uri := "pulsar+ssl://pulsar-gcp-useast1.streaming.datastax.com:6651"
+
+	// Busque na aba "Topics" o "Full Name" do tópico "topic-trades"
+	topicName := "persistent://astrademo-stream/default/topic-trades"
+
+	// Gere um token na aba "Settings"
+	tokenStr := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NjM0NDA1ODksImlzcyI6ImRhdGFzdGF4Iiwic3ViIjoiY2xpZW50O2UxOWI1YTcxLWVhMDUtNDNkZS05ZTFjLWIzODg2NTRhODMyZTtZWE4wY21Ga1pXMXZMWE4wY21WaGJRPT07YTE2YWFmNzBkMyIsInRva2VuaWQiOiJhMTZhYWY3MGQzIn0.aePVWyx3sQgK5YJJWFQ0yg-yBsSoJcIKQM952ta8dHWgcoPJUptYOmDwDCMUUZ-TGBhzNQxbXFT9qXz98ZbgOwF1H4jj_bRLnXgP2aTF8T-Ud7b4QWfmJdPfXbOP6JpChMPHinm0mEQDgsQtJgJwtlYg6oZxNtzr5ggmSd1AINVTHLA-2AnXQAJUPR2tN0y6jXu5306uTin16VYDOpT4gUpJnzffGOhZO0ENUV_PmVqV4wV3lm93Q1gp6YhNKOuhRTwf0zc72CdZUkA_otYunPU-vvVA6lXaCvCtHxIEFbqeBweHftIMZMo10RBdp95Dzg2vIAXgCTmA1EDOkUn5Cw"
 
 	token := pulsar.NewAuthenticationToken(tokenStr)
 
@@ -87,6 +93,7 @@ func main() {
 		panic(err)
 	}
 	defer file.Close()
+	today := time.Now().Format("2006-01-02")
 
 	reader := bufio.NewReader(file)
 	ctx := context.Background()
@@ -101,12 +108,12 @@ func main() {
 
 		GrssTradAmt, err := strconv.ParseFloat(strings.ReplaceAll(s[3], ",", "."), 32)
 		TradQty, err := strconv.ParseInt(s[4], 10, 32)
-		TS, err := time.Parse("2006-01-02 150405.000 -07", s[0]+" "+s[5][:6]+"."+s[5][6:]+" -03")
+		TS, err := time.Parse("2006-01-02 150405.000 -07", today+" "+s[5][:6]+"."+s[5][6:]+" -03")
 
 		msg := pulsar.ProducerMessage{
 			Value: &tradeType{
-				TradeId:     strings.ReplaceAll(s[0], "-", "") + s[5] + s[6],
-				RptDt:       strings.ReplaceAll(s[0], "-", ""),
+				TradeId:     strings.ReplaceAll(today, "-", "") + s[5] + s[6],
+				RptDt:       strings.ReplaceAll(today, "-", ""),
 				TS:          TS,
 				TckrSymb:    s[1],
 				UpdActn:     s[2],

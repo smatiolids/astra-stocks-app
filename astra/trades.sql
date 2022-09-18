@@ -1,4 +1,4 @@
-CREATE TABLE stocks.trades (
+CREATE TABLE stockapp.trades (
     TradeId TEXT,
     RptDt TEXT,
     TS TIMESTAMP,
@@ -10,5 +10,5 @@ CREATE TABLE stocks.trades (
     TradId TEXT,
     TradgSsnId TEXT,
     TradDt TEXT,
-    PRIMARY KEY( (RptDt,TckrSymb), TS)
-) WITH CLUSTERING ORDER BY  (TS DESC)
+    PRIMARY KEY( (RptDt,TckrSymb), TS, TradId)
+) WITH CLUSTERING ORDER BY  (TS DESC, TradId DESC);
