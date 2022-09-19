@@ -41,7 +41,7 @@ const IntradayChart = () => {
   const [dataAggr, setDataAggr] = useState({});
   const [pooling, setPooling] = useState(true);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setPooling(event.target.checked);
   };
   const { loading, error, data } = useQuery(GET_TRADES, {

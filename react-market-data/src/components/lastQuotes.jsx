@@ -15,7 +15,7 @@ const GET_QUOTES = gql`
   }
 `;
 
-const columns: GridColDef[] = [
+const columns = [
   { field: 'tckrsymb', headerName: 'Symbol' , width:200},
   {
     field: 'grsstradamt',

@@ -16,7 +16,7 @@ const GET_TRADES = gql`
   }
 `;
 
-const columns: GridColDef[] = [
+const columns = [
   { field: 'symbol', headerName: 'Symbol' },
   {
     field: 'timestamp',
