@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 const GET_TRADES = gql`
   query getLastTrades {

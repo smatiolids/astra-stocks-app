@@ -1,6 +1,6 @@
 import { gql, useLazyQuery } from '@apollo/client';
 import { useState } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { LinearProgress } from '@mui/material';
 
 const GET_QUOTES = gql`
