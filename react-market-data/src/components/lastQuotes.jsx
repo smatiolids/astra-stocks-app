@@ -1,4 +1,4 @@
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
 import { useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { LinearProgress } from '@mui/material';

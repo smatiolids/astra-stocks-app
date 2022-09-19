@@ -1,5 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import {  useState,  } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactJson from 'react-json-view';
 import {
@@ -73,7 +72,7 @@ const Symbols = function (props) {
       body: JSON.stringify({ crpnnm: data.crpnnm }),
     };
 
-    const response = await fetch(
+    await fetch(
       `${APP_URL}/symbols/${data.tckrsymb}`,
       requestOptions
     ).then((response) => response.json());
@@ -83,7 +82,7 @@ const Symbols = function (props) {
   };
 
   return (
-    <div class="w-100 m-10 justify-items-center">
+    <div className="w-100 m-10 justify-items-center">
       {!symbol && (
         <div>
           <Card>

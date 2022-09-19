@@ -1,5 +1,4 @@
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
-import { useState } from 'react';
+import { gql, useQuery } from '@apollo/client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 const GET_TRADES = gql`
@@ -22,7 +21,7 @@ const columns: GridColDef[] = [
   {
     field: 'timestamp',
     headerName: 'Timestamp',
-    width: 250
+    width: 250,
   },
   {
     field: 'id',
@@ -39,7 +38,10 @@ const columns: GridColDef[] = [
 ];
 
 const TradesList = function (props) {
-  const { loading, error, data} = useQuery(GET_TRADES, {pollInterval: 1000, fetchPolicy: "network-only" });
+  const { loading, error, data } = useQuery(GET_TRADES, {
+    pollInterval: 1000,
+    fetchPolicy: 'network-only',
+  });
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
@@ -57,19 +59,18 @@ const TradesList = function (props) {
             {JSON.stringify(data.data.data.values)}
           </div>
         )} */}
-      {data &&
-        data.trades && (
-          <div style={{ height: 700, backgroundColor: 'white' }}>
-            <DataGrid
-              rows={data.trades.values.map((e) => {
-                return { id: e.seq, ...e };
-              })}
-              columns={columns}
-              pageSize={50}
-              rowsPerPageOptions={[50, 100]}
-            />
-          </div>
-        )}
+      {data && data.trades && (
+        <div style={{ height: 700, backgroundColor: 'white' }}>
+          <DataGrid
+            rows={data.trades.values.map((e) => {
+              return { id: e.seq, ...e };
+            })}
+            columns={columns}
+            pageSize={50}
+            rowsPerPageOptions={[50, 100]}
+          />
+        </div>
+      )}
     </div>
   );
 };

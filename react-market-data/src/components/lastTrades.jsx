@@ -1,18 +1,32 @@
 import { gql, useQuery, useLazyQuery } from '@apollo/client';
 import { useState } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { sortBy } from 'lodash';
+import { format } from 'date-fns';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+} from '@mui/material';
+import CodeIcon from '@mui/icons-material/Code';
 
 const GET_TRADES = gql`
-  query getLastQuotes($tckrsymb: String) {
-    trades(filter: { rptdt: { eq: "20220603" }, tckrsymb: { eq: $tckrsymb } }, options: { pageSize: 20 }) {
+  query getLastQuotes($dt: String, $symbol: String) {
+    trades(
+      options: { pageSize: 20 }
+      filter: { rptdt: { eq: $dt }, tckrsymb: { eq: $symbol } }
+    ) {
       values {
         tckrsymb
         rptdt
         ts
         grsstradamt
         tradqty
-        tradeid
+        tradid
       }
     }
   }
@@ -29,11 +43,15 @@ const GET_SYMBOLS = gql`
 `;
 
 const columns = [
-  { field: 'tckrsymb', headerName: 'Symbol' },
+  {
+    field: 'tckrsymb',
+    headerName: 'Símbolo',
+    width: 300,
+  },
   {
     field: 'ts',
     headerName: 'Date',
-    width: 300
+    width: 300,
   },
   {
     field: 'grsstradamt',
@@ -44,7 +62,7 @@ const columns = [
     headerName: 'Qtde.',
   },
   {
-    field: 'tradeid',
+    field: 'tradid',
     headerName: 'ID.',
   },
 ];
@@ -52,50 +70,87 @@ const columns = [
 const LastTrades = function (props) {
   const { loading, error, data } = useQuery(GET_SYMBOLS);
   const [tckrsymb, setSymbol] = useState('PETR4');
-  const [geQuotes, quotes] = useLazyQuery(GET_TRADES, {variables: { tckrsymb }});
+  const [showCode, setShowCode] = useState(false);
+  const [geQuotes, quotes] = useLazyQuery(GET_TRADES, {
+    variables: { dt: format(new Date(), 'yyyyMMdd'), symbol: tckrsymb },
+  });
 
   const onSymbolSelected = (event) => {
     setSymbol(event.target.value);
   };
 
-  console.log(quotes);
+  console.log(tckrsymb);
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
 
   return (
-    <div>
-      <div>
-
-        <select value={tckrsymb} onChange={onSymbolSelected}>
-          { sortBy(data.symbols.values,'tckrsymb').map((e) => (
-            <option key={e.tckrsymb} value={e.tckrsymb}>
-              {`${e.tckrsymb}: ${e.crpnnm}`}
-            </option>
-          ))}
-        </select>
-        <input type="button"
-          value="Ver Últimos Negócios"
-          onClick={() => geQuotes({ variables: { tckrsymb } })}
+    <div className="w-100 m-10 justify-items-center">
+      <Card>
+        <CardHeader
+          title={`Negociações`}
+          action={
+            <>
+              <IconButton
+                aria-label="show-code"
+                onClick={() => setShowCode(!showCode)}
+              >
+                <CodeIcon />
+              </IconButton>
+            </>
+          }
         />
-      </div>
-      {quotes && quotes.loading && <div>Loading quotes</div>}
-      {quotes && quotes.error && <div>Erro: {quotes.error}</div>}
-      {quotes &&
-        quotes.data &&
-        quotes.data.trades &&
-        quotes.data.trades.values && (
-          <div style={{ height: 500, width: '100%', backgroundColor: 'white' }}>
-            <DataGrid
-              rows={quotes.data.trades.values.map((e) => {
-                return { id: e.tradeid, ...e };
-              })}
-              columns={columns}
-              pageSize={50}
-              rowsPerPageOptions={[50, 100]}
-            />
+        <CardContent>
+          <div>
+            <div>
+              <FormControl>
+                <Select value={tckrsymb} onChange={onSymbolSelected}>
+                  {sortBy(data.symbols.values, 'tckrsymb').map((e) => (
+                    <MenuItem key={e.tckrsymb} value={e.tckrsymb}>
+                      {`${e.tckrsymb}: ${e.crpnnm}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <input
+                type="button"
+                value="Ver Últimos Negócios"
+                onClick={() =>
+                  geQuotes({
+                    variables: {
+                      dt: format(new Date(), 'yyyyMMdd'),
+                      symbol: tckrsymb,
+                    },
+                  })
+                }
+              />
+            </div>
+            {quotes && quotes.loading && <div>Loading quotes</div>}
+            {quotes && quotes.error && <div>Erro: {quotes.error}</div>}
+            {quotes &&
+              quotes.data &&
+              quotes.data.trades &&
+              quotes.data.trades.values && (
+                <div
+                  style={{
+                    height: 500,
+                    width: '100%',
+                    backgroundColor: 'white',
+                  }}
+                >
+                  <DataGrid
+                    rows={quotes.data.trades.values.map((e) => {
+                      return { id: e.tradid, ...e };
+                    })}
+                    columns={columns}
+                    pageSize={50}
+                    rowsPerPageOptions={[50, 100]}
+                  />
+                </div>
+              )}
           </div>
-        )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
