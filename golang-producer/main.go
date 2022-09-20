@@ -13,6 +13,10 @@ import (
 	"github.com/apache/pulsar-client-go/pulsar"
 )
 
+var gStreamingURI = "pulsar+ssl://pulsar-gcp-useast1.streaming.datastax.com:6651"
+var gTopicName = "persistent://rmd-astrademo-stream/default/topic-trades"
+var gAstraTokenStrToPublishToTopic = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NjM2MzcwNDcsImlzcyI6ImRhdGFzdGF4Iiwic3ViIjoiY2xpZW50O2IyOTFjOTZkLWExNmQtNDBhMy05MjcwLTIwNGNjNjlhYTQ1ZDtjbTFrTFdGemRISmhaR1Z0YnkxemRISmxZVzA9OzJiZmJmNjhmNjUiLCJ0b2tlbmlkIjoiMmJmYmY2OGY2NSJ9.cu3Oqrwve5wW6uyku1BaWOpVlbQF24wK-5t6QUAY4PnqUn5IPeEz81Sg9MCnGrd6xYPIdo4TpROXHh7H3_Wr5uQHDW6ibtNPy-ANLJ0gy5LDBRUFFNeMLlrU1wrNNo4StI2NEwph9YbGjhE695cD3zyLxH8COsVAoqx9fQeXB1C3kI8IjdtFV9itrb-LmU8l45qqwQENqZ9A6WZhBSOoLHdUcG6mR09tGMsyuGMg81HQWGQg0cKrFhWySOZ0w6HpzuRdyFw2Vu-hl50KwHQXWeyHMJd9EV0xHqduSi8R0RaOK6keITzehBPgRwfFvh9Uz-I-_tDaCwZJzFuEW8yL8g"
+
 type tradeType struct {
 	TradeId     string    `json:"TradeId"`
 	RptDt       string    `json:"RptDt"`
@@ -51,13 +55,13 @@ func main() {
 	// Configuração para conexão com Astra Streaming
 
 	// Busque o "Broker Service URL" na aba "Connect"
-	uri := "pulsar+ssl://pulsar-gcp-useast1.streaming.datastax.com:6651"
+	uri := gStreamingURI
 
 	// Busque na aba "Topics" o "Full Name" do tópico "topic-trades"
-	topicName := "persistent://astrademo-stream/default/topic-trades"
+	topicName := gTopicName
 
 	// Gere um token na aba "Settings"
-	tokenStr := "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NjM0NDA1ODksImlzcyI6ImRhdGFzdGF4Iiwic3ViIjoiY2xpZW50O2UxOWI1YTcxLWVhMDUtNDNkZS05ZTFjLWIzODg2NTRhODMyZTtZWE4wY21Ga1pXMXZMWE4wY21WaGJRPT07YTE2YWFmNzBkMyIsInRva2VuaWQiOiJhMTZhYWY3MGQzIn0.aePVWyx3sQgK5YJJWFQ0yg-yBsSoJcIKQM952ta8dHWgcoPJUptYOmDwDCMUUZ-TGBhzNQxbXFT9qXz98ZbgOwF1H4jj_bRLnXgP2aTF8T-Ud7b4QWfmJdPfXbOP6JpChMPHinm0mEQDgsQtJgJwtlYg6oZxNtzr5ggmSd1AINVTHLA-2AnXQAJUPR2tN0y6jXu5306uTin16VYDOpT4gUpJnzffGOhZO0ENUV_PmVqV4wV3lm93Q1gp6YhNKOuhRTwf0zc72CdZUkA_otYunPU-vvVA6lXaCvCtHxIEFbqeBweHftIMZMo10RBdp95Dzg2vIAXgCTmA1EDOkUn5Cw"
+	tokenStr := gAstraTokenStrToPublishToTopic
 
 	token := pulsar.NewAuthenticationToken(tokenStr)
 
